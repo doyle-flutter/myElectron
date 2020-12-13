@@ -5,9 +5,10 @@
 - [x] Page
 - [x] IPC
 - [x] HTTP
-- [ ] Socket.io
+- [x] Socket.io
 - [ ] Desktop Native Functions
-  - ... 
+  - Notification
+  - ...
 - [ ] SPA
   - React
   - Svelte

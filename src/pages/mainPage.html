@@ -27,5 +27,12 @@
             <a href="./pageTwo.html">PageTwo</a>
         </div>
     </div>
+    <script type="module" src="../../node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script type="module">
+        const socket = io('ws://192.168.0.3:3003/');
+        socket.on('connect', _ => console.log('connect!'));
+        socket.on('hi', data => console.log(`hi : ${data}`));
+        socket.on('disconnect', _ => console.log('disconnect!'));
+    </script> 
 </body>
 </html>
