@@ -26,13 +26,51 @@
         <div>
             <a href="./pageTwo.html">PageTwo</a>
         </div>
+        <div>
+            <p>Network State : <span id="networkState"></span></p>
+        </div>
+        <div>
+            <a href="./vscodeDemo.html">VSCODE - Demo</a>
+        </div>
     </div>
     <script type="module" src="../../node_modules/socket.io/client-dist/socket.io.js"></script>
     <script type="module">
-        const socket = io('ws://192.168.0.3:3003/');
+        const socket = io('ws://192.168.219.117:3003/');
         socket.on('connect', _ => console.log('connect!'));
         socket.on('hi', data => console.log(`hi : ${data}`));
         socket.on('disconnect', _ => console.log('disconnect!'));
+
+        // EVENT -> mainThread 'before-input-event' 이벤트가 window 보다 우선 실행 됨
+        window.addEventListener('keyup',(v,_) => console.log('KEYUP'), true);
+
+        // Network State Check (1)
+        const networkState = document.getElementById('networkState');
+        const state = navigator.onLine;
+        networkState.innerText = state;
+        state ? networkState.style.color = 'blue' : networkState.style.color = 'red';
+
+        const myNotification = new Notification(
+            'NetwrokState', 
+            { body: state ? 'online': networkState.style.color = 'Offline'}
+        );
+
+        myNotification.onclick = () => {
+            console.log('Notification clicked')
+        }
+
+        // Network State Check (2)
+        const check = (_) => { 
+            new Notification(
+                'NetwrokState(2)', 
+                { body: state ? 'online': networkState.style.color = 'Offline'}
+            );
+            networkState.innerText = navigator.onLine;
+            navigator.onLine ? networkState.style.color = 'blue' : networkState.style.color = 'red';
+        };
+        window.addEventListener('online', check);
+        window.addEventListener('offline', check);
+
+
     </script> 
 </body>
 </html>
