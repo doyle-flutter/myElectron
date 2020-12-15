@@ -6,7 +6,7 @@
     <title>JamesDEV</title>
 </head>
 <body>
-    <div>
+    <div id="content">
         <div style="text-align: center;">
             <h3>안녕하세요 Electron !</h3>
         </div>
@@ -70,7 +70,18 @@
         window.addEventListener('online', check);
         window.addEventListener('offline', check);
 
-
     </script> 
+    <script defer >
+    // LocalStorage & IPC
+        const {ipcRenderer} = require('electron');
+        window.onload = () =>{
+            ipcRenderer.send('settingOn', true);
+            ipcRenderer.on('settingOn', function(e,data) {
+                if(Object.keys(data).length < 1) return;
+                const content= document.getElementById('content');
+                content.style.fontSize = data.fontSize;
+            });
+        }
+    </script>
 </body>
 </html>

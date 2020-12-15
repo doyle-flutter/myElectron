@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>Setting</title>
+</head>
+<body>
+    <!-- Seach -->
+    <div class="settingSearchWrapper">
+        <input type="text" id="settingSearch" class="settingSearch" placeholder="search" />
+        <div class='icon'>icon</div>
+    </div>
+    <div class="settingFontWrapper">
+        <p>Font-Size</p>
+        <input type="text" id="settingFont" class="settingFont" placeholder="14px" />
+    </div>
+        
+    
+
+    <div id="saveBtn" class="saveBtn">Save</div>
+    <style>
+        div.settingSearchWrapper{
+            position: relative;
+            font-size: 0;
+        }
+        input.settingSearch{
+            position: relative;
+            width: 90%;
+            height: 32px;
+            outline: none;
+            border: none;
+            padding: 0;
+            top: 0px;
+            right: 0;
+            left: 0;
+            border-top: 1px solid grey;
+            border-bottom: 1px solid grey;
+            border-left: 1px solid grey;
+        }
+        div.settingSearchWrapper > div.icon{
+            position: absolute;
+            display: inline-block;
+            text-align: center;
+            height: 32px;
+            width: 10%;
+            right: 0;
+            top: 0;
+            border-top: 1px solid grey;
+            border-bottom: 1px solid grey;
+            border-right: 1px solid grey;
+        }
+        div.saveBtn{
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            display: inline-block;
+        }
+
+        div.settingFontWrapper{
+            /* position: relative; */
+            text-align: center;
+        }
+        div.settingFontWrapper > p{
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+        }
+        div.settingFontWrapper > input[text]{
+            display: inline-block;
+        }
+
+    </style>
+    <script defer>
+        const os = require('os');
+        const storage = require('electron-json-storage');
+        storage.setDataPath(os.tmpdir());
+        const dataPath = storage.getDataPath();
+        // localJsonFilePath
+        console.log(dataPath);
+
+        // SET
+        storage.set('foobar', { foo: 'bar' }, function(error) {
+            if (error) throw error;
+        });
+        // GET
+        storage.get('foobar', function(error, data) {
+            if (error) throw error;
+            console.log('get-foobar', data );
+        });
+
+        storage.getMany([ 'foobar', 'barbaz' ], function(error, data) {
+            if (error) throw error;
+            console.log('getMany')
+            console.log(`data.foobar : ${data.foobar}`);
+            console.log(`data.barbaz : ${data.barbaz}`);
+        });
+        storage.getAll(function(error, data) {
+            if (error) throw error;
+            console.log('getAll', data);
+        });
+
+        // REMOVE
+        // - target
+        // storage.remove('foobar', function(error) {
+        //     if (error) throw error;
+        // });
+        // // - all
+        // storage.clear(function(error) {
+        //     if (error) throw error;
+        // });
+        
+        const {ipcRenderer} = require('electron');
+        const settingSearch = document.getElementById('settingSearch');
+        const saveBtn = document.getElementById('saveBtn');
+        const settingFont = document.getElementById('settingFont');
+
+        settingSearch.onkeypress = e => {
+            if(settingSearch.value === undefined || settingSearch.value.length < 1) return;
+            if(e.code === 'Enter'){
+                settingSearch.value = '';
+                return ipcRenderer.send('settingChange', true);
+            }
+        };
+
+
+        saveBtn.addEventListener('click', (_) => {
+            storage.set('setting', {fontSize: settingFont.value}, function(error) {
+                if (error) return alert("Setting ERR!");
+                settingFont.value = '';
+                return ipcRenderer.send('settingChange', true);
+            });
+        });
+
+    </script>
+</body>
+</html>

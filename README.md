@@ -13,6 +13,8 @@
   - Transfer data between window and main process(IPC & Browser)
   - Online / Offline Check & Notification(One-way & addEventListener)
   - ...
+- [x] LocalDB
+  - electron-json-storage & storage - IPC : (ex) FontSize
 - [ ] Demo : VSCODE
 - [ ] SPA
   - React
