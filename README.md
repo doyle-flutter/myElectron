@@ -15,6 +15,7 @@
   - ...
 - [x] LocalDB
   - electron-json-storage & storage - IPC : (ex) FontSize
+  - Sqlite3 : File
 - [ ] Demo : VSCODE
 - [ ] SPA
   - React

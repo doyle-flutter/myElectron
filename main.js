@@ -155,3 +155,31 @@ const localStorageSetting = () => {
     })
   });
 };
+
+// const db = require('sqlite').open({filename: '/tmp/database.db'});
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database(path.join(__dirname,'/db/sql.db'), (err) => {
+  if (err) return console.error(err.message);
+  console.log('Connected to the in-File SQlite database.');
+});
+db.serialize( () => {
+  db.get("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='mysq'",[],(err,row)=>{
+    if(err) return console.log(err);
+    if(Object.keys(row).length >= 1) return;
+    return db.get("CREATE TABLE IF NOT EXISTS 'mysq' (a TEXT)");
+  });
+  
+  db.get('SELECT * FROM mysq',[],(err, row) => {
+    if(err) return console.log
+    if(row == undefined) return db.get('INSERT INTO mysq VALUES (?)',['asd'],(err,row) => {
+        if(err) return console.log(err);
+        return db.get('SELECT * FROM mysq',[],(err, row) => {console.log(row); db.close();});
+      });
+  });
+})
+
+
+
+
+
+
